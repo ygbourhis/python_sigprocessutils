@@ -30,7 +30,7 @@ class DownSamplingLSBIntegration(object):
 
     The LSB error is integrated in order to modulate the LSB so that the mean
     value of it's modulation reconstructs the lost values which are inferior
-    to what the LSB can give (sort of an authomatic dither except that the
+    to what the LSB can give (sort of an automatic dither except that the
     noise will be correlated).
     """
 
