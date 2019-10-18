@@ -10,6 +10,7 @@ correlated white noise. However this noise been on the LSB it is really low
 
 
 # TODO:
+* Add unittest
 * Add dither to decorrelate the noise.
 * Add 24 bits support
 * Add frequency downsampling (ex: 96 KHz -> 44.1 KHz)
