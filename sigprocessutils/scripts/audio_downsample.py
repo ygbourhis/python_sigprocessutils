@@ -78,9 +78,9 @@ def main():
             )
             outfile.write_packed_frames(outputs)
             progress_percent = (frame_nb / total_frames) * 100
-            out_str = '\rProgression: %s%%' % progress_percent
+            out_str = '\rProgression: %3.3f%%' % progress_percent
             if options.verbose:
-                out_str += ' | Input: %s | Output: %s' % (
+                out_str += ' | Input: %s -> Output: %s' % (
                     str(inputs), str(outputs)
                 )
             str_nb_chars = len(out_str)
@@ -88,8 +88,10 @@ def main():
             if remaining_chars < 0:
                 remaining_chars = 0
             out_str += ' ' * remaining_chars
-            last_out_nb_chars = sys.stdout.write('\r%s' % str(outputs))
+            last_out_nb_chars = sys.stdout.write(out_str)
             sys.stdout.flush()
+        sys.stdout.write('\n')
+        sys.stdout.flush()
 
     finally:
         logger.debug('Success')
