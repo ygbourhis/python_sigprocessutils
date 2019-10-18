@@ -78,9 +78,9 @@ OR:
 
 # Useful Links:
 
-http://www.bravegnu.org/blog/python-wave.html
-https://github.com/sole/snippets/blob/master/audio/generate_noise_test_python/script.py
-http://soledadpenades.com/2009/10/29/fastest-way-to-generate-wav-files-in-python-using-the-wave-module/
-https://soledadpenades.com/posts/2009/fastest-way-to-generate-wav-files-in-python-using-the-wave-module/
-http://fsincere.free.fr/isn/python/cours_python_ch9.php
-https://www.cameronmacleod.com/blog/reading-wave-python
+* http://www.bravegnu.org/blog/python-wave.html
+* https://github.com/sole/snippets/blob/master/audio/generate_noise_test_python/script.py
+* http://soledadpenades.com/2009/10/29/fastest-way-to-generate-wav-files-in-python-using-the-wave-module/
+* https://soledadpenades.com/posts/2009/fastest-way-to-generate-wav-files-in-python-using-the-wave-module/
+* http://fsincere.free.fr/isn/python/cours_python_ch9.php
+* https://www.cameronmacleod.com/blog/reading-wave-python
