@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+CURDIR=$(pwd)
+SELFDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+cd $SELFDIR
+python -m pycodestyle sigprocessutils
+if [[ $1 = '-v' ]]; then
+    python -m pylint --rcfile=pylintrc --reports=yes sigprocessutils
+else
+    python -m pylint --rcfile=pylintrc sigprocessutils
+fi
+cd $CURDIR
