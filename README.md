@@ -29,6 +29,23 @@ The goal is to see if it's useless or if it does really add precision.
 * Add 24 bits support
 * Add frequency downsampling (ex: 96 KHz -> 44.1 KHz)
 
+# Install:
+
+first install virtualenvwrapper:
+* https://virtualenvwrapper.readthedocs.io/en/latest/install.html
+
+Then:
+
+    mkvirtualenv --python=/usr/bin/python3 python_sigprocessutils
+    git clone git@github.com:ygbourhis/python_sigprocessutils.git
+    cd python_sigprocessutils
+    pip install -Ur requirements.txt
+    pip install -e .
+
+Before using in a shell do not forget to activate the virtualenv:
+
+    workon python_sigprocessutils
+
 # Script usage:
 
     audio_down_sample -i input_file.wav -o output_file.wav -b 16
