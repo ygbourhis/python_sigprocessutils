@@ -26,7 +26,7 @@ The goal is to see if it's useless or if it does really add precision.
 # TODO:
 * Add unittest
 * Add dither to decorrelate the noise.
-* Add 24 bits support
+* Add support to downsample to 24 bits (from 24 bits is now supported)
 * Add frequency downsampling (ex: 96 KHz -> 44.1 KHz)
 
 # Install:

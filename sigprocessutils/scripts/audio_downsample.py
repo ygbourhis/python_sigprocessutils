@@ -76,7 +76,6 @@ def main():
                 ) + output_offset
                 for integrator, inp in zip(downsample_chans, inputs)
             )
-            outfile.write_packed_frames(outputs)
             progress_percent = (frame_nb / total_frames) * 100
             out_str = '\rProgression: %3.3f%%' % progress_percent
             if options.verbose:
@@ -90,6 +89,7 @@ def main():
             out_str += ' ' * remaining_chars
             last_out_nb_chars = sys.stdout.write(out_str)
             sys.stdout.flush()
+            outfile.write_packed_frames(outputs)
         sys.stdout.write('\n')
         sys.stdout.flush()
 

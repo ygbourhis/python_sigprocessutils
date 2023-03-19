@@ -4,9 +4,11 @@ from struct import unpack as struct_unpack
 
 # Bit size struct mapping:
 # https://docs.python.org/3.6/library/struct.html#format-characters
+# https://stackoverflow.com/questions/3783677/how-to-read-integers-from-a-file-that-are-24bit-and-little-endian-using-python
 STRUCT_FORMATS = {
     8: 'B',
     16: 'h',
+    24: 'i',
     32: 'i',
     64: 'q',
 }
@@ -14,18 +16,21 @@ STRUCT_FORMATS = {
 SAMPLE_WIDTHS = {
     1: 'B',
     2: 'h',
+    3: 'i',
     4: 'i',
 }
 
 BITS_WIDTHS = {
     8: 1,
     16: 2,
+    24: 3,
     32: 4,
 }
 
 WIDTH_BITS = {
     1: 8,
     2: 16,
+    3: 24,
     4: 32,
 }
 
@@ -96,6 +101,17 @@ class WaveRead(WaveMixin):
         self.close()
 
     def unpack_data(self, data):
+        if self.sampwidth == 3:  # 24 bits audio
+            split_size = len(data) // 3
+            datas = [data[i*3:(i+1)*3] for i in range(split_size)]
+            for i, d in enumerate(datas):
+                datas[i] = d + (b'\x00' if d[2] <= 128 else b'\xff')  # make each 24 bits 32 bits long signed
+                # Maybe we could use num = int.from_bytes(d, byteorder='little', signed=True)
+                # and then int.to_bytes(num, byteorder='little', signed=True, length=4)
+                # In order to convert 24 to 32 bits ?
+            reformated_data = b''.join(datas)
+            # Maybe we could return the `num` variables instead ?
+            return struct_unpack(self.struct_fmt, reformated_data)
         return struct_unpack(self.struct_fmt, data)
 
     def readframes(self, n):
