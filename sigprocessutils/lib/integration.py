@@ -1,5 +1,7 @@
 from __future__ import division
+import logging
 
+LOG = logging.getLogger(__name__)
 
 class Integrator(object):
 
@@ -38,8 +40,10 @@ class DownSamplingLSBIntegration(object):
     rounded_offset = 0
     coef = 1
     output = None
+    min = None
+    max = None
 
-    def __init__(self, integrator=None, offset=0, coef=1):
+    def __init__(self, integrator=None, offset=0, coef=1, min_value=None, max_value=None):
         self.offset = offset
         self.rounded_offset = int(round(self.offset))
         self.coef = coef
@@ -48,11 +52,20 @@ class DownSamplingLSBIntegration(object):
             self.integrator = integrator
         else:
             self.integrator = Integrator(-self.offset, self.offset)
+        self.set_min_max(min_value, max_value)
 
-    def transfert(self, value):
-        v1 = (value * self.coef) - self.output
-        v2 = self.integrator.integrate(v1)
-        self.output = int(round(v2))
+    def transfer(self, value):
+        self.output = int(round(
+            self.integrator.integrate(
+                (value * self.coef) - self.output
+            )
+        ))
+        if self.min is not None and self.min > self.output:
+            LOG.warning("Low Clipping during integration : %s", self.output)
+            self.output = self.min
+        elif self.max is not None and self.max < self.output:
+            LOG.warning("High Clipping during integration : %s", self.output)
+            self.output = self.max
         return self.output
 
     def reset(self, offset=None, coef=None):
@@ -63,3 +76,7 @@ class DownSamplingLSBIntegration(object):
             self.coef = coef
         self.output = self.rounded_offset
         self.integrator.reset(-self.offset, self.offset)
+
+    def set_min_max(self, min_value=None, max_value=None):
+        self.min = min_value
+        self.max = max_value
