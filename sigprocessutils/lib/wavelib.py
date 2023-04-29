@@ -1,6 +1,12 @@
+from functools import cached_property
+import logging
 import wave
 from struct import pack as struct_pack
 from struct import unpack as struct_unpack
+
+
+LOG = logging.getLogger(__name__)
+
 
 # Bit size struct mapping:
 # https://docs.python.org/3.6/library/struct.html#format-characters
@@ -34,6 +40,13 @@ WIDTH_BITS = {
     4: 32,
 }
 
+WIDTH_MIN_MAX = {
+    1: (0, 255),
+    2: (-32768, 32767),
+    3: (-8388608, 8388607),
+    4: (-2147483648, 2147483647),
+}
+
 
 class WaveMixin(object):
     _filename = None
@@ -48,7 +61,7 @@ class WaveMixin(object):
     def tell(self):
         return self._wfp.tell()
 
-    @property
+    @cached_property
     def struct_fmt(self):
         return '<%d%s' % (self.nchannels, SAMPLE_WIDTHS[self.sampwidth])
 
@@ -56,33 +69,41 @@ class WaveMixin(object):
     def wfp(self):
         return self._wfp
 
-    @property
+    @cached_property
     def nchannels(self):
         return self._wfp.getnchannels()
 
-    @property
+    @cached_property
     def sampwidth(self):
         return self._wfp.getsampwidth()
 
-    @property
+    @cached_property
     def framerate(self):
         return self._wfp.getframerate()
 
-    @property
+    @cached_property
     def nframes(self):
         return self._wfp.getnframes()
 
-    @property
+    @cached_property
     def comptype(self):
         return self._wfp.getcomptype()
 
-    @property
+    @cached_property
     def compname(self):
         return self._wfp.getcompname()
 
-    @property
+    @cached_property
     def params(self):
         return self._wfp.getparams()
+
+    @cached_property
+    def min_value(self):
+        return WIDTH_MIN_MAX[self.sampwidth][0]
+
+    @cached_property
+    def max_value(self):
+        return WIDTH_MIN_MAX[self.sampwidth][1]
 
 
 class WaveRead(WaveMixin):
@@ -153,8 +174,23 @@ class WaveWrite(WaveMixin):
     def setparams(self, params):
         self._wfp.setparams(params)
 
+    def constrain_value(self, value):
+        if self.min_value <= value <= self.max_value:
+            return value
+        elif value < self.min_value:
+            LOG.warning("Low Clipping : %s", value)
+            return self.min_value
+        elif value > self.max_value:
+            LOG.warning("High Clipping : %s", value)
+            return self.max_value
+
+    def constrain_values(self, values):
+        return tuple(
+            self.constrain_value(value) for value in values
+        )
+
     def pack_data(self, *args):
-        return struct_pack(self.struct_fmt, *args)
+        return struct_pack(self.struct_fmt, *self.constrain_values(args))
 
     def writeframesraw(self, data):
         self._wfp.writeframesraw(data)

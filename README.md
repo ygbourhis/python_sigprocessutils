@@ -73,8 +73,8 @@ Or:
     for i in range(nb_frames):
         paked_input = faded.readframes(1)
         input_g, input_d = struct.unpack('<hh', paked_input)
-        output_g = downsample_l.transfert(input_g/256) + 128
-        output_d = downsample_r.transfert(input_d/256) + 128
+        output_g = downsample_l.transfer(input_g/256) + 128
+        output_d = downsample_r.transfer(input_d/256) + 128
         print(input_g, ':', output_g, '|', input_d, ':', output_d)
         packed_output_g = struct.pack('B', output_g)
         packed_output_d = struct.pack('B', output_d)
@@ -86,8 +86,8 @@ OR:
     for i in range(nb_frames):
         paked_input = faded.readframes(1)
         input_g, input_d = struct.unpack('<hh', paked_input)
-        output_g = downsample_l.transfert(input_g/256) + 128
-        output_d = downsample_r.transfert(input_d/256) + 128
+        output_g = downsample_l.transfer(input_g/256) + 128
+        output_d = downsample_r.transfer(input_d/256) + 128
         print(input_g, ':', output_g, '|', input_d, ':', output_d)
         packed_output = struct.pack('<BB', output_g, output_d)
         downsample.writeframesraw(packed_output)
@@ -98,8 +98,8 @@ OR:
     for i in range(nb_frames):
         paked_input = faded.readframes(1)
         input_g, input_d = struct.unpack('<hh', paked_input)
-        output_g = downsample_l.transfert(input_g/256) + 128
-        output_d = downsample_r.transfert(input_d/256) + 128
+        output_g = downsample_l.transfer(input_g/256) + 128
+        output_d = downsample_r.transfer(input_d/256) + 128
         print(input_g, ':', output_g, '|', input_d, ':', output_d)
         packed_output = struct.pack('<BB', output_g, output_d)
         downsample.writeframes(packed_output)
